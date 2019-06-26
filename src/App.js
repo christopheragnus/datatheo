@@ -6,6 +6,7 @@ import "./App.css";
 import List from "./components/List";
 import New from "./components/New";
 import Show from "./components/Show";
+import { TestTable } from "./components/Table-test";
 
 import { Layout, Menu, Breadcrumb } from "antd";
 const { Header, Content, Footer } = Layout;
@@ -40,6 +41,7 @@ function App() {
               <List path="/" />
               <New path="/new" />
               <Show path="/show/:id" />
+              <TestTable path="/test" />
             </Router>
           </div>
         </Content>

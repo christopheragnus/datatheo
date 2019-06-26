@@ -1,41 +1,18 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Table, Divider, Tag, Input, Button, Icon } from "antd";
+import { Input, Row, Col } from "antd";
 import { Link, navigate } from "@reach/router";
+import KeyboardEventHandler from "react-keyboard-event-handler";
 
-import Highlighter from "react-highlight-words";
+import "./List.css";
 
-function nameFormatter(text) {
-  return text.split(", ");
-}
+import { DataTable } from "./Table";
 
-const DataTable = props => {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Title</th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.dataSource.map(row => (
-          <tr onClick={() => navigate(`/show/${row.id}`)}>
-            <td>{nameFormatter(row.name)[1]}</td>
-            <td>{nameFormatter(row.name)[0]}</td>
-            <td>{row.job_titles}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
+const myRef = React.createRef();
 
 export default class List extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
 
     this.state = {
       data: [
@@ -53,12 +30,14 @@ export default class List extends Component {
     };
   }
 
-  focus() {
-    this.myRef.current.focus();
-  }
+  handleFocus = () => {
+    //myRef.current.focus();
+    console.log(myRef.current, "tada");
+  };
 
   filterList = event => {
     let input = event.target.value;
+    this.setState({ searchText: event.target.value });
     //console.log(this.state.data);
     let initialData = this.state.data;
     let filteredList = initialData.filter(function(item) {
@@ -71,139 +50,51 @@ export default class List extends Component {
     //console.log(filteredList);
   };
 
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={node => {
-            this.searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => this.handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select());
-      }
-    },
-    render: text => (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[this.state.searchText]}
-        autoEscape
-        textToHighlight={text.toString()}
-      />
-    )
-  });
-
-  handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    this.setState({ searchText: selectedKeys[0] });
-  };
-
-  handleReset = clearFilters => {
-    clearFilters();
-    this.setState({ searchText: "" });
-  };
-
   componentDidMount() {
     axios
       .get("https://dt-interviews.appspot.com/")
       .then(res => {
         this.setState({ data: res.data, tableData: res.data });
-        console.log(res);
+        //console.log(res);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   }
 
   render() {
-    const { tableData } = this.state;
-    const columns = [
-      {
-        title: "First Name",
-        dataIndex: "name",
-        key: "name",
-        render: text => nameFormatter(text)[1]
-        //...this.getColumnSearchProps("name")
-      },
-      {
-        title: "Last Name",
-        dataIndex: "name",
-        key: "id",
-        render: text => nameFormatter(text)[0]
-        //...this.getColumnSearchProps("name")
-      },
-      {
-        title: "Title",
-        dataIndex: "job_titles",
-        key: "job_titles",
-        ...this.getColumnSearchProps("job_titles")
-      },
-      {
-        title: "Action",
-        key: "action",
-        render: (text, record) => (
-          <span>
-            <Link to="/show">Show</Link>
-          </span>
-        )
-      }
-    ];
+    const { tableData, searchText } = this.state;
 
     return (
       <div>
-        <form>
-          <fieldset className="form-group">
-            <input
-              type="text"
-              className="form-control form-control-lg"
-              placeholder="Search"
-              onChange={this.filterList}
-            />
-          </fieldset>
-        </form>
-        {/* {console.log(this.state.data)} */}
+        <p onClick={() => this.handleFocus()}>Submit</p>
+        <Input
+          allowClear
+          type="text"
+          className="form-control form-control-lg spaceDivider"
+          placeholder="Search Job Titles"
+          onChange={this.filterList}
+        />
 
-        {/* <Table dataSource={data} columns={columns} ref={this.myRef} /> */}
-        <DataTable dataSource={tableData} />
+        <KeyboardEventHandler
+          handleKeys={["up", "down", "enter"]}
+          onKeyEvent={(key, e) => {
+            console.log(`do something upon keydown event of ${key}`);
+            if (key === "up") {
+              myRef.current.next.focus();
+            }
+            if (key === "down") {
+              myRef.current.next.focus();
+            }
+          }}
+        >
+          <DataTable
+            dataSource={tableData}
+            searchText={searchText}
+            ref={myRef}
+            handleFocus={this.handleFocus}
+          />
+        </KeyboardEventHandler>
       </div>
     );
   }

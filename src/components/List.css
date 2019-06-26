@@ -1,0 +1,80 @@
+.textHighlight {
+  background-color: rgb(255, 192, 105);
+  padding: 0;
+  font-weight: 600;
+}
+
+.spaceDivider {
+  margin-bottom: 1.2em;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  input {
+    width: 15em;
+  }
+
+  tr {
+    margin-bottom: 1.5em;
+  }
+
+  thead tr {
+    display: none;
+  }
+
+  /* tr {
+    border: 1px solid #ccc;
+  } */
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  td:nth-of-type(1):before {
+    content: "First Name";
+    font-weight: 600;
+  }
+  td:nth-of-type(2):before {
+    content: "Last Name";
+    font-weight: 600;
+  }
+  td:nth-of-type(3):before {
+    content: "Job Title";
+    font-weight: 600;
+  }
+}
+
+.show {
+  background-color: blue;
+}

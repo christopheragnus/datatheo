@@ -32,14 +32,15 @@ export default class Show extends Component {
   }
 
   render() {
+    const imageUrl = `https://thispersondoesnotexist.com/image?random_number=${new Date().getTime()}`;
     const { data, loading } = this.state;
-    const imageUrl = `https://thispersondoesnotexist.com/image`;
 
     return (
       <div
         style={{
           background: "#ECECEC",
-          padding: "30px"
+          padding: "30px",
+          display: "flex"
         }}
       >
         <Card
