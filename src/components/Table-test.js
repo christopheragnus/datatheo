@@ -38,6 +38,41 @@ export const TestTable = props => {
   const [selected, setSelected] = useState(null);
   const myRef = useRef(null);
 
+  function arrowUp() {
+    // return selected - 1;
+  }
+
+  function arrowDown() {
+    // var temp = selected + 1;
+    // if (temp < data.slice(-1)[0].id) {
+    //   console.log(selected + 1, "top");
+    //   return temp;
+    // }
+    // console.log(selected, "bottom");
+    // return selected;
+    //return selected + 1;
+  }
+
+  function focus(e) {
+    const rows = document.getElementsByClassName("hidefocusring");
+    console.log(rows);
+    if (e.keyCode === 39 || e.key === "ArrowUp") {
+      const targetId = parseInt(e.target.id) - 1;
+      rows[targetId + 1].focus();
+      console.log("tada up", targetId);
+    } else if (e.keyCode === 37 || e.key === "ArrowDown") {
+      const targetId = parseInt(e.target.id) - 1;
+      rows[targetId - 1].focus();
+      console.log("tada down");
+    }
+  }
+
+  function _addRow(id) {
+    const rows = [];
+
+    return rows;
+  }
+
   //const highlightRow = "";
 
   return (
@@ -46,15 +81,16 @@ export const TestTable = props => {
       onKeyEvent={(key, e) => {
         //console.log(`do something upon keydown event of ${key}`);
         if (key === "up") {
-          console.log("up");
+          //console.log("up");
           //console.log(myRef);
-          myRef.focus();
-          //setSelected(selected - 1);
+
+          setSelected(arrowUp);
         }
         if (key === "down") {
-          console.log("down");
+          //console.log("down");
+          //myRef.current.focus();
           //myRef.focus();
-          setSelected(selected + 1);
+          setSelected(arrowDown);
         }
       }}
     >
@@ -67,14 +103,19 @@ export const TestTable = props => {
           </tr>
         </thead>
         <tbody>
+          {console.log(data.length)}
           {data.map((row, index) => (
             <Row
               tabIndex="0"
-              className={`${selected === row.id ? "show" : "hide"}`}
+              className={`hidefocusring ${
+                selected === row.id ? "show" : "hide"
+              }`}
               key={row.id}
-              onClick={() => setSelected(row.id)} //row.id
-              onBlur={() => setSelected(null)}
-              ref={myRef}
+              //onClick={() => setSelected(row.id)} //row.id
+              //onBlur={() => setSelected(null)}
+              onKeyDown={focus}
+              //ref={myRef}
+              id={row.id}
             >
               <td>{nameFormatter(row.name)[1]}</td>
               <td>{nameFormatter(row.name)[0]}</td>
@@ -113,8 +154,6 @@ export const TestTable = props => {
           <td>engineer</td>
         </Row> */}
         </tbody>
-
-        {console.log("Current", selected)}
       </table>
     </KeyboardEventHandler>
   );

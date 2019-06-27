@@ -78,3 +78,7 @@ table {
 .show {
   background-color: blue;
 }
+
+.hidefocusring:focus {
+  /* outline: none; */
+}

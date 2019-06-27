@@ -76,25 +76,11 @@ export default class List extends Component {
           onChange={this.filterList}
         />
 
-        <KeyboardEventHandler
-          handleKeys={["up", "down", "enter"]}
-          onKeyEvent={(key, e) => {
-            console.log(`do something upon keydown event of ${key}`);
-            if (key === "up") {
-              myRef.current.next.focus();
-            }
-            if (key === "down") {
-              myRef.current.next.focus();
-            }
-          }}
-        >
-          <DataTable
-            dataSource={tableData}
-            searchText={searchText}
-            ref={myRef}
-            handleFocus={this.handleFocus}
-          />
-        </KeyboardEventHandler>
+        <DataTable
+          dataSource={tableData}
+          searchText={searchText}
+          handleFocus={this.handleFocus}
+        />
       </div>
     );
   }
