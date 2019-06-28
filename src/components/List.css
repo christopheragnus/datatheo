@@ -12,8 +12,14 @@ table {
   border-collapse: collapse;
 }
 
+td {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
 @media only screen and (max-width: 760px),
-  (min-device-width: 768px) and (max-device-width: 1024px) {
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
   /* Force table to not be like tables anymore */
   table,
   thead,
@@ -65,10 +71,12 @@ table {
     content: "First Name";
     font-weight: 600;
   }
+
   td:nth-of-type(2):before {
     content: "Last Name";
     font-weight: 600;
   }
+
   td:nth-of-type(3):before {
     content: "Job Title";
     font-weight: 600;
@@ -76,9 +84,12 @@ table {
 }
 
 .show {
-  background-color: blue;
+  background-color: #1890ff;
+  color: white;
 }
 
 .hidefocusring:focus {
-  /* outline: none; */
+  outline: solid #003a8c;
+  background-color: #1890ff;
+  color: white;
 }

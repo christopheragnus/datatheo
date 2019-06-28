@@ -8,7 +8,7 @@ import New from "./components/New";
 import Show from "./components/Show";
 import { TestTable } from "./components/Table-test";
 
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu } from "antd";
 const { Header, Content, Footer } = Layout;
 
 function App() {
@@ -25,6 +25,9 @@ function App() {
           >
             <Menu.Item key="1">
               <Link to="/">List</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Link to="/new">New Employee</Link>
             </Menu.Item>
           </Menu>
         </Header>

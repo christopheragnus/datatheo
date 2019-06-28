@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-
 import axios from "axios";
-
-import { Card, Icon, Avatar, Switch, Skeleton } from "antd";
-const { Meta } = Card;
+import { Card, Skeleton } from "antd";
 
 function nameFormatter(text) {
   return text.split(", ");
@@ -14,14 +11,40 @@ export default class Show extends Component {
     super(props);
     this.state = {
       data: [],
-      loading: true
+      loading: true,
+      selected: props.id
     };
   }
 
-  componentDidMount() {
-    const { id } = this.props;
+  _callback = e => {
+    const { navigate } = this.props;
+    const { data, selected } = this.state;
+
+    if (e.key === "ArrowUp") {
+      this.setState({ selected: parseInt(selected) - 1 });
+      navigate(`/show/${selected}`);
+      this._apiCall();
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      this.setState({ selected: parseInt(selected) + 1 });
+      navigate(`/show/${selected}`);
+      this._apiCall();
+      return;
+    }
+
+    if (e.key === "Enter") {
+      return navigate("/");
+    }
+    console.log(e.key);
+  };
+
+  _apiCall = () => {
+    const { selected } = this.state;
+    this.setState({ loading: true });
     axios
-      .get(`https://dt-interviews.appspot.com/${id}`)
+      .get(`https://dt-interviews.appspot.com/${selected}`)
       .then(res => {
         this.setState({ data: res.data, loading: false });
         //console.log(res);
@@ -29,6 +52,15 @@ export default class Show extends Component {
       .catch(err => {
         //console.log(err);
       });
+  };
+
+  componentDidMount() {
+    this._apiCall();
+    document.addEventListener("keydown", this._callback);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this._callback);
   }
 
   render() {
@@ -49,6 +81,7 @@ export default class Show extends Component {
           cover={<img alt="" src={imageUrl} />}
         >
           <Skeleton loading={loading}>
+            <p>ID: {data.id}</p>
             <p>First Name: {data.name ? nameFormatter(data.name)[1] : null}</p>
             <p>Last Name: {data.name ? nameFormatter(data.name)[0] : null}</p>
             <p>Title: {data.job_titles}</p>

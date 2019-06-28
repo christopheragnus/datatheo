@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Input, Row, Col } from "antd";
-import { Link, navigate } from "@reach/router";
-import KeyboardEventHandler from "react-keyboard-event-handler";
+import { Input } from "antd";
 
 import "./List.css";
 
 import { DataTable } from "./Table";
+import { db } from "../utils/firebase";
 
 const myRef = React.createRef();
 
@@ -15,18 +14,11 @@ export default class List extends Component {
     super(props);
 
     this.state = {
-      data: [
-        {
-          department: "WATER MGMNT",
-          employee_annual_salary: "106836.00",
-          job_titles: "CIVIL ENGINEER IV",
-          id: 5,
-          name: "ABAD JR,  VICENTE M"
-        }
-      ],
+      data: [{}],
       tableData: [],
       searchText: "",
-      loading: true
+      loading: true,
+      googleData: []
     };
   }
 
@@ -54,7 +46,13 @@ export default class List extends Component {
     axios
       .get("https://dt-interviews.appspot.com/")
       .then(res => {
-        this.setState({ data: res.data, tableData: res.data });
+        let data = res.data.map(item => ({
+          ...item,
+          lastName: item.name.split(",  ")[0],
+          firstName: item.name.split(",  ")[1]
+        }));
+
+        this.setState({ data: data, tableData: data });
         //console.log(res);
       })
       .catch(err => {
@@ -62,12 +60,27 @@ export default class List extends Component {
       });
   }
 
+  _readDB = async () => {
+    let users = await db
+      .collection("users")
+      .get()
+      .then(querySnapshot => {
+        console.log(querySnapshot);
+        return querySnapshot.docs.map(doc => doc.data());
+      });
+
+    console.log(users);
+
+    this.setState({ tableData: users });
+  };
+
   render() {
     const { tableData, searchText } = this.state;
 
     return (
       <div>
-        <p onClick={() => this.handleFocus()}>Submit</p>
+        <p onClick={this._readDB}>Submit</p>
+
         <Input
           allowClear
           type="text"
