@@ -39,6 +39,27 @@ export const DataTable = props => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
+      <Pagination>
+        <PageIcon onClick={() => props.makeRequestWithPage(1)}>
+          &laquo;
+        </PageIcon>
+        {pageNumbers.map(number => {
+          const active = props.currentPage === number ? true : false;
+
+          return (
+            <PageIcon
+              onClick={() => props.makeRequestWithPage(number)}
+              key={number}
+              active={active}
+            >
+              {number}
+            </PageIcon>
+          );
+        })}
+        <PageIcon onClick={() => props.makeRequestWithPage(321)}>
+          &raquo;
+        </PageIcon>
+      </Pagination>
       <table>
         <thead>
           <tr>
@@ -78,17 +99,11 @@ export const DataTable = props => {
           ))}
         </tbody>
       </table>
-      <Pagination>
-        <PageIcon>&laquo;</PageIcon>
-        <PageIcon active>1</PageIcon>
-        <PageIcon>2</PageIcon>
-        <PageIcon>3</PageIcon>
-        <PageIcon>4</PageIcon>
-        <PageIcon>&raquo;</PageIcon>
-      </Pagination>
     </div>
   );
 };
+
+const pageNumbers = [1, 2, 3, 4, 5];
 
 const Row = styled.tr`
   font-size: 1em;

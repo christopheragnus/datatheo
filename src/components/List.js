@@ -68,6 +68,7 @@ export default class List extends Component {
   };
 
   makeRequestWithPage = page => {
+    this.setState({ loading: true });
     axios
       .get("https://dt-interviews.appspot.com/", {
         params: {
@@ -75,8 +76,6 @@ export default class List extends Component {
         }
       })
       .then(res => {
-        this.setState({ loading: true });
-
         let data = res.data.map(item => ({
           ...item,
           lastName: item.name.split(",  ")[0],
@@ -111,6 +110,7 @@ export default class List extends Component {
               dataSource={tableData}
               searchText={searchText}
               handleFocus={this.handleFocus}
+              makeRequestWithPage={this.makeRequestWithPage}
             />
           )}
         </ListContext.Provider>
