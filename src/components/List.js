@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Input } from "antd";
+import { Input, Spin } from "antd";
 
 import "./List.css";
 
@@ -18,8 +18,9 @@ export default class List extends Component {
       data: [{}],
       tableData: [],
       searchText: "",
-      loading: true,
-      selectedUser: {}
+      loading: false,
+      selectedUser: {},
+      page: {}
     };
   }
 
@@ -44,21 +45,7 @@ export default class List extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get("https://dt-interviews.appspot.com/")
-      .then(res => {
-        let data = res.data.map(item => ({
-          ...item,
-          lastName: item.name.split(",  ")[0],
-          firstName: item.name.split(",  ")[1]
-        }));
-
-        this.setState({ data: data, tableData: data });
-        //console.log(res);
-      })
-      .catch(err => {
-        //console.log(err);
-      });
+    this.makeRequestWithPage(1);
 
     this._readDB();
   }
@@ -68,20 +55,44 @@ export default class List extends Component {
       .collection("users")
       .get()
       .then(querySnapshot => {
-        console.log(querySnapshot);
         return querySnapshot.docs.map(doc => doc.data());
       });
 
-    //console.log(users);
+    let tableData = await [...users, ...this.state.tableData];
+    let data = await [...users, ...this.state.data];
 
-    this.setState(state => {
-      state.tableData = [...state.tableData, ...users];
-      state.data = [...state.data, ...users];
+    this.setState({
+      tableData,
+      data
     });
   };
 
+  makeRequestWithPage = page => {
+    axios
+      .get("https://dt-interviews.appspot.com/", {
+        params: {
+          page
+        }
+      })
+      .then(res => {
+        this.setState({ loading: true });
+
+        let data = res.data.map(item => ({
+          ...item,
+          lastName: item.name.split(",  ")[0],
+          firstName: item.name.split(",  ")[1]
+        }));
+
+        this.setState({ data: data, tableData: data, loading: false });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ loading: false });
+      });
+  };
+
   render() {
-    const { tableData, searchText } = this.state;
+    const { loading, tableData, searchText } = this.state;
 
     return (
       <div>
@@ -93,12 +104,15 @@ export default class List extends Component {
             placeholder="Search Job Titles"
             onChange={this.filterList}
           />
-
-          <DataTable
-            dataSource={tableData}
-            searchText={searchText}
-            handleFocus={this.handleFocus}
-          />
+          {loading ? (
+            <Spin />
+          ) : (
+            <DataTable
+              dataSource={tableData}
+              searchText={searchText}
+              handleFocus={this.handleFocus}
+            />
+          )}
         </ListContext.Provider>
       </div>
     );

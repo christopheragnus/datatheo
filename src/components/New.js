@@ -62,11 +62,12 @@ class New extends Component {
 
         db.collection("users")
           .add({
-            firstName,
-            lastName,
+            firstName: firstName.toUpperCase(),
+            lastName: lastName.toUpperCase(),
             employee_annual_salary: salary,
-            job_titles: title,
-            department
+            job_titles: title.toUpperCase(),
+            department: department.toUpperCase(),
+            id: Math.floor(Math.random() * 9010) + 100
           })
           .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
