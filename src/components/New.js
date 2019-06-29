@@ -62,10 +62,10 @@ class New extends Component {
 
         db.collection("users")
           .add({
-            first: firstName,
-            last: lastName,
-            salary,
-            title,
+            firstName,
+            lastName,
+            employee_annual_salary: salary,
+            job_titles: title,
             department
           })
           .then(docRef => {

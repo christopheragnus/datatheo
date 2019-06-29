@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, navigate } from "@reach/router";
 import Highlighter from "react-highlight-words";
 import { Button } from "antd";
 
 import styled from "styled-components";
 
-import "./List.css";
+import ListContext from "../utils/Context";
 
-function nameFormatter(text) {
-  return text.split(", ");
-}
+import "./List.css";
 
 function focus(e) {
   const rows = document.getElementsByClassName("hidefocusring");
@@ -37,47 +35,57 @@ function focus(e) {
 
 export const DataTable = props => {
   //const [selected, setSelected] = useState(null);
+  const value = useContext(ListContext);
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Title</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.dataSource.map(row => (
-          <Row
-            tabIndex="0"
-            className={`hidefocusring`}
-            //onFocus={() => setSelected(row.id)}
-            //onBlur={() => setSelected(null)}
-            key={row.id}
-            id={row.id}
-            onKeyDown={focus}
-          >
-            <td>{row.firstName}</td>
-            <td>{row.lastName}</td>
-            <td>
-              <Highlighter
-                highlightClassName={"textHighlight"}
-                searchWords={[props.searchText]}
-                autoEscape={true}
-                textToHighlight={row.job_titles}
-              />
-            </td>
-            <td>
-              <Link to={`/show/${row.id}`}>
-                <Button>Show</Button>
-              </Link>
-            </td>
-          </Row>
-        ))}
-      </tbody>
-    </table>
+    <div>
+      <p
+        onClick={() => {
+          console.log(value, "from Context");
+        }}
+      >
+        Test button
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Title</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.dataSource.map(row => (
+            <Row
+              tabIndex="0"
+              className={`hidefocusring`}
+              //onFocus={() => setSelected(row.id)}
+              //onBlur={() => setSelected(null)}
+              key={row.id}
+              id={row.id}
+              onKeyDown={focus}
+            >
+              <td>{row.firstName}</td>
+              <td>{row.lastName}</td>
+              <td>
+                <Highlighter
+                  highlightClassName={"textHighlight"}
+                  searchWords={[props.searchText]}
+                  autoEscape={true}
+                  textToHighlight={row.job_titles}
+                />
+              </td>
+              <td>
+                <Link to={`/show/${row.id}`}>
+                  <Button>Show</Button>
+                </Link>
+              </td>
+            </Row>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

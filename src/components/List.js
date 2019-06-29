@@ -6,6 +6,7 @@ import "./List.css";
 
 import { DataTable } from "./Table";
 import { db } from "../utils/firebase";
+import ListContext from "../utils/Context";
 
 const myRef = React.createRef();
 
@@ -18,7 +19,7 @@ export default class List extends Component {
       tableData: [],
       searchText: "",
       loading: true,
-      googleData: []
+      selectedUser: {}
     };
   }
 
@@ -58,6 +59,8 @@ export default class List extends Component {
       .catch(err => {
         //console.log(err);
       });
+
+    this._readDB();
   }
 
   _readDB = async () => {
@@ -69,9 +72,12 @@ export default class List extends Component {
         return querySnapshot.docs.map(doc => doc.data());
       });
 
-    console.log(users);
+    //console.log(users);
 
-    this.setState({ tableData: users });
+    this.setState(state => {
+      state.tableData = [...state.tableData, ...users];
+      state.data = [...state.data, ...users];
+    });
   };
 
   render() {
@@ -79,21 +85,21 @@ export default class List extends Component {
 
     return (
       <div>
-        <p onClick={this._readDB}>Submit</p>
+        <ListContext.Provider value={tableData}>
+          <Input
+            allowClear
+            type="text"
+            className="form-control form-control-lg spaceDivider"
+            placeholder="Search Job Titles"
+            onChange={this.filterList}
+          />
 
-        <Input
-          allowClear
-          type="text"
-          className="form-control form-control-lg spaceDivider"
-          placeholder="Search Job Titles"
-          onChange={this.filterList}
-        />
-
-        <DataTable
-          dataSource={tableData}
-          searchText={searchText}
-          handleFocus={this.handleFocus}
-        />
+          <DataTable
+            dataSource={tableData}
+            searchText={searchText}
+            handleFocus={this.handleFocus}
+          />
+        </ListContext.Provider>
       </div>
     );
   }
