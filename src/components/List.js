@@ -5,7 +5,7 @@ import { Input, Spin } from "antd";
 import "./List.css";
 
 import { DataTable } from "./Table";
-import { db } from "../utils/firebase";
+//import { db } from "../utils/firebase";
 import ListContext from "../utils/Context";
 
 const myRef = React.createRef();
@@ -20,7 +20,7 @@ export default class List extends Component {
       searchText: "",
       loading: false,
       selectedUser: {},
-      page: {}
+      currentPage: 1
     };
   }
 
@@ -47,25 +47,25 @@ export default class List extends Component {
   componentDidMount() {
     this.makeRequestWithPage(1);
 
-    this._readDB();
+    //this._readDB();
   }
 
-  _readDB = async () => {
-    let users = await db
-      .collection("users")
-      .get()
-      .then(querySnapshot => {
-        return querySnapshot.docs.map(doc => doc.data());
-      });
+  // _readDB = async () => {
+  //   let users = await db
+  //     .collection("users")
+  //     .get()
+  //     .then(querySnapshot => {
+  //       return querySnapshot.docs.map(doc => doc.data());
+  //     });
 
-    let tableData = await [...users, ...this.state.tableData];
-    let data = await [...users, ...this.state.data];
+  //   let tableData = await [...users, ...this.state.tableData];
+  //   let data = await [...users, ...this.state.data];
 
-    this.setState({
-      tableData,
-      data
-    });
-  };
+  //   this.setState({
+  //     tableData,
+  //     data
+  //   });
+  // };
 
   makeRequestWithPage = page => {
     this.setState({ loading: true });
@@ -111,6 +111,7 @@ export default class List extends Component {
               searchText={searchText}
               handleFocus={this.handleFocus}
               makeRequestWithPage={this.makeRequestWithPage}
+              currentPage={1}
             />
           )}
         </ListContext.Provider>

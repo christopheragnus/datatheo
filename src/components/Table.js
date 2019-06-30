@@ -43,16 +43,15 @@ export const DataTable = props => {
         <PageIcon onClick={() => props.makeRequestWithPage(1)}>
           &laquo;
         </PageIcon>
-        {pageNumbers.map(number => {
-          const active = props.currentPage === number ? true : false;
-
+        {pageNumbers(props.currentPage).map(pageNumber => {
+          const isActive = props.currentPage === pageNumber ? true : false;
           return (
             <PageIcon
-              onClick={() => props.makeRequestWithPage(number)}
-              key={number}
-              active={active}
+              onClick={() => props.makeRequestWithPage(pageNumber)}
+              key={pageNumber}
+              active={isActive}
             >
-              {number}
+              {pageNumber}
             </PageIcon>
           );
         })}
@@ -60,6 +59,7 @@ export const DataTable = props => {
           &raquo;
         </PageIcon>
       </Pagination>
+
       <table>
         <thead>
           <tr>
@@ -103,7 +103,17 @@ export const DataTable = props => {
   );
 };
 
-const pageNumbers = [1, 2, 3, 4, 5];
+// n = currentNumber
+// n-2, n-1, n, n+1, n+2
+
+const pageNumbers = currentPage => {
+  let numbers = [];
+  for (let i = 0; i < 5; i++) {
+    numbers[i] = currentPage - (2 - i);
+  }
+  return numbers;
+};
+//[1, 2, 3, 4, 5];
 
 const Row = styled.tr`
   font-size: 1em;
