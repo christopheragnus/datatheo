@@ -12,13 +12,13 @@ function focus(e) {
   //console.log(rows);
   if (e.keyCode === 39 || e.key === "ArrowUp") {
     const targetId = parseInt(e.target.dataset.id) - 1;
-    console.log(targetId);
+    //console.log(targetId);
     return targetId < 1 ? console.log("start") : rows[targetId - 1].focus();
   }
 
   if (e.keyCode === 37 || e.key === "ArrowDown") {
     const targetId = parseInt(e.target.dataset.id) - 1;
-    console.log(targetId);
+    //console.log(targetId);
     //console.log("tada down", targetId);
     //console.log(rows.length);
     return targetId < rows.length - 1
@@ -27,8 +27,8 @@ function focus(e) {
   }
 
   if (e.key === "Enter") {
-    console.log("Enter", e.target.id);
-    navigate(`/show/${e.target.id}`);
+    //console.log("Enter", e.target.dataset.id);
+    navigate(`/show/${e.target.dataset.id}`);
   }
 }
 

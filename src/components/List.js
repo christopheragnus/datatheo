@@ -20,7 +20,8 @@ export default class List extends Component {
       tableData: [],
       searchText: "",
       loading: false,
-      currentPage: 1
+      currentPage: 1,
+      dbLoaded: false
     };
   }
 
@@ -57,7 +58,8 @@ export default class List extends Component {
 
     this.setState({
       tableData,
-      data
+      data,
+      dbLoaded: true
     });
   };
 
@@ -96,7 +98,13 @@ export default class List extends Component {
   };
 
   render() {
-    const { loading, tableData, searchText, currentPage } = this.state;
+    const {
+      loading,
+      tableData,
+      searchText,
+      currentPage,
+      dbLoaded
+    } = this.state;
 
     return (
       <Container>
@@ -108,7 +116,9 @@ export default class List extends Component {
             placeholder="Search Job Titles"
             onChange={this.filterList}
           />
-          <Button onClick={() => this._readDB()}>Load DB Data</Button>
+          <Button onClick={() => this._readDB()} disabled={dbLoaded}>
+            Load DB Data
+          </Button>
 
           {loading ? (
             <Spin />

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, Skeleton } from "antd";
+import { Card, Skeleton, Button } from "antd";
 
 function nameFormatter(text) {
   return text.split(", ");
@@ -21,13 +21,21 @@ export default class Show extends Component {
     const { data, selected } = this.state;
 
     if (e.key === "ArrowUp") {
+      if (selected <= 1) {
+        return null;
+      }
+
       this.setState({ selected: parseInt(selected) - 1 });
+
       navigate(`/show/${selected}`);
       this._apiCall();
       return;
     }
 
     if (e.key === "ArrowDown") {
+      if (selected <= 1) {
+        return null;
+      }
       this.setState({ selected: parseInt(selected) + 1 });
       navigate(`/show/${selected}`);
       this._apiCall();
@@ -66,6 +74,7 @@ export default class Show extends Component {
   render() {
     const imageUrl = `https://thispersondoesnotexist.com/image?random_number=${new Date().getTime()}`;
     const { data, loading } = this.state;
+    const { navigate } = this.props;
 
     return (
       <div
@@ -88,6 +97,7 @@ export default class Show extends Component {
             <p>Annual Salary: {`$${data.employee_annual_salary}`}</p>
             <p>Department: {data.department}</p>
           </Skeleton>
+          <Button onClick={() => navigate("/")}>Back</Button>
         </Card>
       </div>
     );
