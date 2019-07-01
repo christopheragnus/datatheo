@@ -35,28 +35,7 @@ function focus(e) {
 export const DataTable = props => {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {/* <Pagination>
-        <PageIcon onClick={() => props.makeRequestWithPage(1)}>
-          &laquo;
-        </PageIcon>
-        {pageNumbers(props.currentPage).map(pageNumber => {
-          const isActive = props.currentPage === pageNumber ? true : false;
-          return (
-            <PageIcon
-              onClick={() => props.makeRequestWithPage(pageNumber)}
-              key={pageNumber}
-              active={isActive}
-            >
-              {pageNumber}
-            </PageIcon>
-          );
-        })}
-        <PageIcon onClick={() => props.makeRequestWithPage(321)}>
-          &raquo;
-        </PageIcon>
-      </Pagination> */}
-
-      <table>
+      <Table>
         <thead>
           <tr>
             <th>First Name</th>
@@ -94,22 +73,10 @@ export const DataTable = props => {
             </Row>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };
-
-// n = currentNumber
-// n-2, n-1, n, n+1, n+2
-
-const pageNumbers = currentPage => {
-  let numbers = [];
-  for (let i = 0; i < 5; i++) {
-    numbers[i] = currentPage - (2 - i);
-  }
-  return numbers;
-};
-//[1, 2, 3, 4, 5];
 
 const Row = styled.tr`
   font-size: 1em;
@@ -121,26 +88,6 @@ const Row = styled.tr`
   }
 `;
 
-// const Pagination = styled.div`
-//   margin-top: 20px;
-//   margin-bottom: 20px;
-// `;
-
-const PageIcon = styled.span`
-  cursor: pointer;
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-  border: 1px solid #ddd;
-
-  ${props =>
-    props.active
-      ? `
-    background-color: #0099FF;
-    color: white;
-    border: 1px solid #0099FF;
-    `
-      : null}
+const Table = styled.table`
+  margin-top: 10px;
 `;

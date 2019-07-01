@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Input, Spin } from "antd";
+import { Input, Spin, Button } from "antd";
 import styled from "styled-components";
 
 import "./List.css";
@@ -10,8 +10,6 @@ import { db } from "../utils/firebase";
 import ListContext from "../utils/Context";
 
 import Pagination from "./Pagination";
-
-const myRef = React.createRef();
 
 export default class List extends Component {
   constructor(props) {
@@ -25,11 +23,6 @@ export default class List extends Component {
       currentPage: 1
     };
   }
-
-  handleFocus = () => {
-    //myRef.current.focus();
-    console.log(myRef.current, "tada");
-  };
 
   filterList = event => {
     let input = event.target.value;
@@ -48,7 +41,7 @@ export default class List extends Component {
 
   componentDidMount() {
     // load DB data to the front
-    this._readDB();
+    //this._readDB();
   }
 
   _readDB = async () => {
@@ -115,6 +108,7 @@ export default class List extends Component {
             placeholder="Search Job Titles"
             onChange={this.filterList}
           />
+          <Button onClick={() => this._readDB()}>Load DB Data</Button>
 
           {loading ? (
             <Spin />
@@ -122,7 +116,6 @@ export default class List extends Component {
             <DataTable
               dataSource={tableData}
               searchText={searchText}
-              handleFocus={this.handleFocus}
               makeRequestWithPage={this.makeRequestWithPage}
               currentPage={1}
             />
