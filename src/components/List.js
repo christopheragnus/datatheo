@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Input, Spin } from "antd";
+import styled from "styled-components";
 
 import "./List.css";
 
 import { DataTable } from "./Table";
-//import { db } from "../utils/firebase";
+import { db } from "../utils/firebase";
 import ListContext from "../utils/Context";
+
+import Pagination from "./Pagination";
 
 const myRef = React.createRef();
 
@@ -19,7 +22,6 @@ export default class List extends Component {
       tableData: [],
       searchText: "",
       loading: false,
-      selectedUser: {},
       currentPage: 1
     };
   }
@@ -45,27 +47,26 @@ export default class List extends Component {
   };
 
   componentDidMount() {
-    this.makeRequestWithPage(1);
-
-    //this._readDB();
+    // load DB data to the front
+    this._readDB();
   }
 
-  // _readDB = async () => {
-  //   let users = await db
-  //     .collection("users")
-  //     .get()
-  //     .then(querySnapshot => {
-  //       return querySnapshot.docs.map(doc => doc.data());
-  //     });
+  _readDB = async () => {
+    let users = await db
+      .collection("users")
+      .get()
+      .then(querySnapshot => {
+        return querySnapshot.docs.map(doc => doc.data());
+      });
 
-  //   let tableData = await [...users, ...this.state.tableData];
-  //   let data = await [...users, ...this.state.data];
+    let tableData = await [...users, ...this.state.tableData];
+    let data = await [...users, ...this.state.data];
 
-  //   this.setState({
-  //     tableData,
-  //     data
-  //   });
-  // };
+    this.setState({
+      tableData,
+      data
+    });
+  };
 
   makeRequestWithPage = page => {
     this.setState({ loading: true });
@@ -82,20 +83,31 @@ export default class List extends Component {
           firstName: item.name.split(",  ")[1]
         }));
 
-        this.setState({ data: data, tableData: data, loading: false });
+        this.setState({
+          data: data,
+          tableData: data,
+          loading: false,
+          currentPage: page
+        });
       })
       .catch(err => {
         console.log(err);
-        this.setState({ loading: false });
+        this.setState({ loading: false, currentPage: page });
       });
   };
 
+  onPageChanged = data => {
+    const { currentPage } = data;
+
+    this.makeRequestWithPage(currentPage);
+  };
+
   render() {
-    const { loading, tableData, searchText } = this.state;
+    const { loading, tableData, searchText, currentPage } = this.state;
 
     return (
-      <div>
-        <ListContext.Provider value={tableData}>
+      <Container>
+        <ListContext.Provider value={{ currentPage }}>
           <Input
             allowClear
             type="text"
@@ -103,6 +115,7 @@ export default class List extends Component {
             placeholder="Search Job Titles"
             onChange={this.filterList}
           />
+
           {loading ? (
             <Spin />
           ) : (
@@ -114,8 +127,13 @@ export default class List extends Component {
               currentPage={1}
             />
           )}
+          <Pagination totalRecords={351} onPageChanged={this.onPageChanged} />
         </ListContext.Provider>
-      </div>
+      </Container>
     );
   }
 }
+
+const Container = styled.div`
+  padding: 20px;
+`;

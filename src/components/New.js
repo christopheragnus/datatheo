@@ -14,7 +14,7 @@ import {
   AutoComplete
 } from "antd";
 
-//import { db } from "../utils/firebase";
+import { db } from "../utils/firebase";
 import { Router, Link, navigate } from "@reach/router";
 
 const { Option } = Select;
@@ -60,24 +60,24 @@ class New extends Component {
         console.log("Received values of form: ", values);
         const { firstName, lastName, salary, title, department } = values;
 
-        // db.collection("users")
-        //   .add({
-        //     firstName: firstName.toUpperCase(),
-        //     lastName: lastName.toUpperCase(),
-        //     employee_annual_salary: salary,
-        //     job_titles: title.toUpperCase(),
-        //     department: department.toUpperCase(),
-        //     id: Math.floor(Math.random() * 9010) + 100
-        //   })
-        //   .then(docRef => {
-        //     console.log("Document written with ID: ", docRef.id);
-        //     this.setState({ message: "User successfully created!" });
-        //     //navigate("/");
-        //   })
-        //   .catch(error => {
-        //     console.error("Error adding document: ", error);
-        //     this.setState({ message: "An error occurred!", error: true });
-        //   });
+        db.collection("users")
+          .add({
+            firstName: firstName.toUpperCase(),
+            lastName: lastName.toUpperCase(),
+            employee_annual_salary: salary,
+            job_titles: title.toUpperCase(),
+            department: department.toUpperCase(),
+            id: Math.floor(Math.random() * 9010) + 100
+          })
+          .then(docRef => {
+            console.log("Document written with ID: ", docRef.id);
+            this.setState({ message: "User successfully created!" });
+            //navigate("/");
+          })
+          .catch(error => {
+            console.error("Error adding document: ", error);
+            this.setState({ message: "An error occurred!", error: true });
+          });
       }
     });
   };

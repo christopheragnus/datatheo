@@ -1,11 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, navigate } from "@reach/router";
 import Highlighter from "react-highlight-words";
 import { Button } from "antd";
 
 import styled from "styled-components";
-
-import ListContext from "../utils/Context";
 
 import "./List.css";
 
@@ -35,11 +33,9 @@ function focus(e) {
 }
 
 export const DataTable = props => {
-  const value = useContext(ListContext);
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Pagination>
+      {/* <Pagination>
         <PageIcon onClick={() => props.makeRequestWithPage(1)}>
           &laquo;
         </PageIcon>
@@ -58,7 +54,7 @@ export const DataTable = props => {
         <PageIcon onClick={() => props.makeRequestWithPage(321)}>
           &raquo;
         </PageIcon>
-      </Pagination>
+      </Pagination> */}
 
       <table>
         <thead>
@@ -125,10 +121,10 @@ const Row = styled.tr`
   }
 `;
 
-const Pagination = styled.div`
-  margin-top: 20px;
-  margin-bottom: 20px;
-`;
+// const Pagination = styled.div`
+//   margin-top: 20px;
+//   margin-bottom: 20px;
+// `;
 
 const PageIcon = styled.span`
   cursor: pointer;

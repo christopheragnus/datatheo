@@ -1,5 +1,7 @@
 import React from "react";
 import { Router, Link } from "@reach/router";
+import dotenv from "dotenv";
+
 import "antd/dist/antd.css";
 import "./App.css";
 
@@ -10,6 +12,8 @@ import { TestTable } from "./components/Table-test";
 
 import { Layout, Menu } from "antd";
 const { Header, Content, Footer } = Layout;
+
+dotenv.config();
 
 function App() {
   return (
