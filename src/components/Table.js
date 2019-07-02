@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Link, navigate } from "@reach/router";
 import Highlighter from "react-highlight-words";
 import { Button } from "antd";
@@ -7,32 +7,37 @@ import styled from "styled-components";
 
 import "./List.css";
 
-function focus(e) {
-  const rows = document.getElementsByClassName("hidefocusring");
-  //console.log(rows);
-  if (e.keyCode === 39 || e.key === "ArrowUp") {
-    const targetId = parseInt(e.target.dataset.id) - 1;
-    //console.log(targetId);
-    return targetId < 1 ? console.log("start") : rows[targetId - 1].focus();
-  }
-
-  if (e.keyCode === 37 || e.key === "ArrowDown") {
-    const targetId = parseInt(e.target.dataset.id) - 1;
-    //console.log(targetId);
-    //console.log("tada down", targetId);
-    //console.log(rows.length);
-    return targetId < rows.length - 1
-      ? rows[targetId + 1].focus()
-      : console.log("end");
-  }
-
-  if (e.key === "Enter") {
-    //console.log("Enter", e.target.dataset.id);
-    navigate(`/show/${e.target.dataset.id}`);
-  }
-}
-
 export const DataTable = props => {
+  const [index, setIndex] = useState(null);
+  //const targetEl = useRef(null);
+
+  function focus(e) {
+    const rows = document.getElementsByClassName("hidefocusring");
+    //let rows = state;
+    //console.log(rows);
+    if (e.keyCode === 39 || e.key === "ArrowUp") {
+      const targetId = parseInt(e.target.dataset.index);
+      //console.log(targetId);
+      return targetId < 1 ? console.log("start") : rows[targetId - 1].focus();
+    }
+
+    if (e.keyCode === 37 || e.key === "ArrowDown") {
+      const targetId = parseInt(e.target.dataset.index);
+      console.log(targetId);
+      //console.log("tada down", targetId);
+
+      return targetId < rows.length - 1
+        ? rows[targetId + 1].focus()
+        : console.log("end");
+      //console.log(rows[targetId + 1]);
+    }
+
+    if (e.key === "Enter") {
+      //console.log("Enter", e.target.dataset.id);
+      navigate(`/show/${e.target.dataset.id}`);
+    }
+  }
+  console.log(index, "this is the index");
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Table>
@@ -44,7 +49,10 @@ export const DataTable = props => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody
+        //ref={targetEl}
+        //onFocus={() => console.log(targetEl.current.children)}
+        >
           {props.dataSource.map(row => (
             <Row
               tabIndex="0"
@@ -53,6 +61,7 @@ export const DataTable = props => {
               //onBlur={() => setSelected(null)}
               key={row.id}
               data-id={row.id}
+              data-index={props.dataSource.indexOf(row)}
               onKeyDown={focus}
             >
               <td>{row.firstName}</td>
@@ -66,7 +75,7 @@ export const DataTable = props => {
                 />
               </td>
               <td>
-                <Link to={`/show/${row.id}`}>
+                <Link to={`/show/${row.id}`} onClick={() => setIndex(row.id)}>
                   <Button>Show</Button>
                 </Link>
               </td>
