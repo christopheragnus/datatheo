@@ -8,12 +8,36 @@ import "./App.css";
 import List from "./components/List";
 import New from "./components/New";
 import Show from "./components/Show";
-import { TestTable } from "./components/Table-test";
+
+import { ListContextProvider } from "./utils/Context";
 
 import { Layout, Menu } from "antd";
 const { Header, Content, Footer } = Layout;
 
 dotenv.config();
+
+const initialState = {
+  selectedPage: 1,
+  selectedRow: null
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "updatePage":
+      return {
+        ...state,
+        selectedPage: action.payload
+      };
+    case "updateRow":
+      return {
+        ...state,
+        selectedRow: action.payload
+      };
+
+    default:
+      return state;
+  }
+};
 
 function App() {
   return (
@@ -44,12 +68,13 @@ function App() {
               marginTop: "16px"
             }}
           >
-            <Router>
-              <List path="/" />
-              <New path="/new" />
-              <Show path="/show/:id" />
-              <TestTable path="/test" />
-            </Router>
+            <ListContextProvider initialState={initialState} reducer={reducer}>
+              <Router>
+                <List path="/" />
+                <New path="/new" />
+                <Show path="/show/:id" />
+              </Router>
+            </ListContextProvider>
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>

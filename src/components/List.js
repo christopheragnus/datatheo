@@ -7,11 +7,11 @@ import "./List.css";
 
 import { DataTable } from "./Table";
 import { db } from "../utils/firebase";
-import ListContext from "../utils/Context";
+import { ListContext } from "../utils/Context";
 
 import Pagination from "./Pagination";
 
-export default class List extends Component {
+class List extends Component {
   constructor(props) {
     super(props);
 
@@ -28,7 +28,6 @@ export default class List extends Component {
   filterList = event => {
     let input = event.target.value;
     this.setState({ searchText: event.target.value });
-    //console.log(this.state.data);
     let initialData = this.state.data;
     let filteredList = initialData.filter(function(item) {
       if (item.job_titles.includes(input.toUpperCase())) {
@@ -37,7 +36,6 @@ export default class List extends Component {
       return null;
     });
     this.setState({ tableData: filteredList });
-    //console.log(filteredList);
   };
 
   componentDidMount() {
@@ -92,50 +90,44 @@ export default class List extends Component {
   };
 
   onPageChanged = data => {
-    const { currentPage } = data;
-
-    this.makeRequestWithPage(currentPage);
+    // invoked by Pagination component
+    const [{ selectedPage }, dispatch] = this.context;
+    this.makeRequestWithPage(selectedPage);
   };
 
   render() {
-    const {
-      loading,
-      tableData,
-      searchText,
-      currentPage,
-      dbLoaded
-    } = this.state;
+    const { loading, tableData, searchText, dbLoaded } = this.state;
 
     return (
       <Container>
-        <ListContext.Provider value={{ currentPage }}>
-          <Input
-            allowClear
-            type="text"
-            className="form-control form-control-lg spaceDivider"
-            placeholder="Search Job Titles"
-            onChange={this.filterList}
-          />
-          <Button onClick={() => this._readDB()} disabled={dbLoaded}>
-            Load DB Data
-          </Button>
+        <Input
+          allowClear
+          type="text"
+          className="form-control form-control-lg spaceDivider"
+          placeholder="Search Job Titles"
+          onChange={this.filterList}
+        />
+        <Button onClick={() => this._readDB()} disabled={dbLoaded}>
+          Load DB Data
+        </Button>
 
-          {loading ? (
-            <Spin />
-          ) : (
-            <DataTable
-              dataSource={tableData}
-              searchText={searchText}
-              makeRequestWithPage={this.makeRequestWithPage}
-              currentPage={1}
-            />
-          )}
-          <Pagination totalRecords={351} onPageChanged={this.onPageChanged} />
-        </ListContext.Provider>
+        {loading ? (
+          <Spin />
+        ) : (
+          <DataTable
+            dataSource={tableData}
+            searchText={searchText}
+            makeRequestWithPage={this.makeRequestWithPage}
+          />
+        )}
+        <Pagination totalRecords={351} onPageChanged={this.onPageChanged} />
       </Container>
     );
   }
 }
+
+List.contextType = ListContext;
+export default List;
 
 const Container = styled.div`
   padding: 20px;

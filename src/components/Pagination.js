@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import ListContext from "../utils/Context";
+import { ListContext } from "../utils/Context";
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -25,7 +25,7 @@ const range = (from, to, step = 1) => {
 class Pagination extends Component {
   constructor(props) {
     super(props);
-    const { totalRecords = null, pageLimit = 30, pageNeighbours = 1 } = props;
+    const { totalRecords = null, pageNeighbours = 1 } = props;
 
     this.totalRecords = typeof totalRecords === "number" ? totalRecords : 0;
 
@@ -41,20 +41,25 @@ class Pagination extends Component {
   }
 
   componentDidMount() {
-    this.gotoPage(1);
+    const [{ selectedPage }, dispatch] = this.context;
+    this.gotoPage(selectedPage);
   }
 
   gotoPage = page => {
+    const [{ selectedPage, selectedRow }, dispatch] = this.context;
     const { onPageChanged = f => f } = this.props;
 
+    console.log(page, this.totalPages);
     const currentPage = Math.max(0, Math.min(page, this.totalPages));
+    console.log(currentPage);
 
     const paginationData = {
       currentPage,
       totalPages: this.totalPages,
-      pageLimit: this.pageLimit,
       totalRecords: this.totalRecords
     };
+
+    dispatch({ type: "updatePage", payload: currentPage });
 
     this.setState({ currentPage }, () => onPageChanged(paginationData));
   };
@@ -138,7 +143,7 @@ class Pagination extends Component {
 
     return (
       <Paginate>
-        <nav aria-label="Countries Pagination">
+        <nav aria-label="Pagination">
           <ul className="pagination">
             {pages.map((page, index) => {
               if (page === LEFT_PAGE)
@@ -207,8 +212,6 @@ const PageIcon = styled.span`
 `;
 
 Pagination.propTypes = {
-  //totalRecords: PropTypes.number.isRequired,
-  pageLimit: PropTypes.number,
   pageNeighbours: PropTypes.number,
   onPageChanged: PropTypes.func
 };
