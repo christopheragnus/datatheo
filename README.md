@@ -10,6 +10,8 @@ Click on the table to focus on a row, and press UP or DOWN on arrow keys to focu
 
 In employee's details, pressing UP or DOWN shows the previous/next employee.
 
+App is deployed on Heroku here: https://data-theo.herokuapp.com/
+
 - This uses the API endpoint deployed at: https://dt-interviews.appspot.com/
 - Dataset: http://catalog.data.gov/dataset/current-employee-names-salaries-and-position-titles-840f7.
 - The web server's source code is available at https://bitbucket.org/datatheorem/public-frontend-coding-exercise/ .
