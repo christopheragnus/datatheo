@@ -49,9 +49,9 @@ class Pagination extends Component {
     const [{ selectedPage, selectedRow }, dispatch] = this.context;
     const { onPageChanged = f => f } = this.props;
 
-    console.log(page, this.totalPages);
+    //console.log(page, this.totalPages);
     const currentPage = Math.max(0, Math.min(page, this.totalPages));
-    console.log(currentPage);
+    //console.log(currentPage);
 
     const paginationData = {
       currentPage,

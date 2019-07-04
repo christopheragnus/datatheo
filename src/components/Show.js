@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Card, Skeleton, Button } from "antd";
 
+import { ListContext } from "../utils/Context";
+
 function nameFormatter(text) {
   return text.split(", ");
 }
 
-export default class Show extends Component {
+class Show extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,12 +21,17 @@ export default class Show extends Component {
   _callback = e => {
     const { navigate } = this.props;
     const { data, selected } = this.state;
+    const [{ selectedRow }, dispatch] = this.context;
 
     if (e.key === "ArrowUp") {
       if (selected <= 1) {
         return null;
       }
 
+      dispatch({
+        type: "updateRow",
+        payload: parseInt(selected - 1)
+      });
       this.setState({ selected: parseInt(selected) - 1 });
 
       navigate(`/show/${selected}`);
@@ -36,6 +43,12 @@ export default class Show extends Component {
       if (selected <= 1) {
         return null;
       }
+
+      dispatch({
+        type: "updateRow",
+        payload: parseInt(selected + 1)
+      });
+
       this.setState({ selected: parseInt(selected) + 1 });
       navigate(`/show/${selected}`);
       this._apiCall();
@@ -45,7 +58,7 @@ export default class Show extends Component {
     if (e.key === "Enter") {
       return navigate("/");
     }
-    console.log(e.key);
+    //console.log(e.key);
   };
 
   _apiCall = () => {
@@ -58,7 +71,7 @@ export default class Show extends Component {
         //console.log(res);
       })
       .catch(err => {
-        //console.log(err);
+        console.log(err);
       });
   };
 
@@ -103,3 +116,6 @@ export default class Show extends Component {
     );
   }
 }
+
+Show.contextType = ListContext;
+export default Show;
